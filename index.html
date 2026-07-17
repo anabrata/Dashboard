@@ -1,0 +1,1572 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a0a0f">
+    <title>Ultimate Dashboard - By ANABRATA</title>
+    
+    <!-- Tab Icons -->
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+
+        /* ============================================================
+           CSS RESET & DESIGN SYSTEM
+           ============================================================ */
+        :root {
+            --bg-color: #030305;
+            --surface-color: rgba(13, 13, 20, 0.45);
+            --surface-border: rgba(255, 255, 255, 0.07);
+            --surface-border-hover: rgba(255, 255, 255, 0.15);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.35);
+            --accent: #a855f7;
+            --accent-glow: rgba(168, 85, 247, 0.35);
+            --success: #10b981;
+            --success-glow: rgba(16, 185, 129, 0.3);
+            --danger: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-bounce: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --glass-blur: blur(25px);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        html::-webkit-scrollbar,
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Ambient Glowing Blobs */
+        .ambient-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--primary-glow) 0%, rgba(0,0,0,0) 70%);
+            top: -200px;
+            left: -200px;
+            z-index: -2;
+            animation: floatGlow 15s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+
+        .ambient-glow-2 {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-glow) 0%, rgba(0,0,0,0) 70%);
+            bottom: -150px;
+            right: -150px;
+            z-index: -2;
+            animation: floatGlow2 12s infinite alternate-reverse ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(150px, 100px) scale(1.15); }
+        }
+
+        @keyframes floatGlow2 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-100px, -150px) scale(0.9); }
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            background: #030305;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 55px;
+            height: 55px;
+            border: 4px solid rgba(255,255,255,0.03);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            filter: drop-shadow(0 0 10px var(--primary-glow));
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            letter-spacing: 0.2em;
+            color: var(--text-main);
+            text-transform: uppercase;
+            animation: pulse 1.8s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* ============================================================
+           HEADER & NAV BAR
+           ============================================================ */
+        .header {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            padding: 20px 40px;
+            background: rgba(3, 3, 5, 0.45);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--surface-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+            transition: var(--transition-smooth);
+        }
+
+        .header.scrolled {
+            padding: 12px 40px;
+            background: rgba(3, 3, 5, 0.8);
+            border-color: rgba(255,255,255,0.05);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .logo-title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(90deg, #fff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Search Bar */
+        .search-wrapper {
+            position: relative;
+            width: 340px;
+            max-width: 100%;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 11px 16px 11px 44px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--surface-border);
+            border-radius: 30px;
+            color: var(--text-main);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            transition: var(--transition-smooth);
+            outline: none;
+        }
+
+        .search-input:focus {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            color: var(--text-muted);
+            pointer-events: none;
+            transition: var(--transition-smooth);
+        }
+
+        .search-input:focus + .search-icon {
+            color: var(--primary);
+        }
+
+        /* ============================================================
+           TAB BAR (Category Switches)
+           ============================================================ */
+        .tab-bar-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        .tab-bar {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--surface-border);
+            padding: 6px;
+            border-radius: 40px;
+            display: flex;
+            gap: 4px;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+        }
+
+        .tab-btn {
+            padding: 10px 24px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: var(--text-main);
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        /* ============================================================
+           WEBSITES CONTENT GRID
+           ============================================================ */
+        .content-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px 100px;
+        }
+
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Grid Categories */
+        .category-section {
+            margin-bottom: 45px;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 8px;
+        }
+
+        .category-title {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-title::before {
+            content: '';
+            width: 4px;
+            height: 18px;
+            background: var(--primary);
+            border-radius: 4px;
+            box-shadow: 0 0 8px var(--primary);
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 18px;
+        }
+
+        /* Bookmark Card */
+        .bookmark-card {
+            background: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            border-radius: 16px;
+            padding: 16px;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            height: 80px;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+        }
+
+        .bookmark-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--surface-border-hover);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .bookmark-card-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .bookmark-icon-wrap {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .bookmark-icon {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+        }
+
+        .bookmark-emoji {
+            font-size: 1.1rem;
+        }
+
+        .bookmark-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .bookmark-name {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .bookmark-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+
+        /* ============================================================
+           FLASHCARDS CONTENT GRID
+           ============================================================ */
+        .fc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        /* Flashcard Cover Card */
+        .fc-card {
+            background: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            border-radius: 24px;
+            padding: 24px;
+            cursor: pointer;
+            height: 160px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            transition: var(--transition-bounce);
+        }
+
+        .fc-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--surface-border-hover);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+        }
+
+        .fc-card-logo-wrap {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: auto;
+        }
+
+        .fc-card-logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .fc-card-title {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .fc-card-stat {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .fc-note-badge {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            font-size: 0.95rem;
+            opacity: 0.8;
+            color: var(--primary);
+        }
+
+        /* ============================================================
+           NOTEPAD OVERLAY SYSTEM
+           ============================================================ */
+        .notepad-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 3, 5, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition-smooth);
+        }
+
+        .notepad-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .notepad {
+            width: 750px;
+            max-width: 90%;
+            height: 520px;
+            background: rgba(10, 10, 15, 0.85);
+            border: 1px solid var(--surface-border);
+            border-radius: 24px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: scale(0.9);
+            transition: var(--transition-bounce);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+        }
+
+        .notepad-overlay.active .notepad {
+            transform: scale(1);
+        }
+
+        .notepad-header {
+            padding: 24px 30px;
+            border-bottom: 1px solid var(--surface-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .notepad-title {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .notepad-body {
+            flex: 1;
+            padding: 24px 30px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .notepad-textarea {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            resize: none;
+            color: var(--text-main);
+            font-family: var(--font-body);
+            font-size: 1.05rem;
+            line-height: 1.6;
+            transition: var(--transition-smooth);
+        }
+
+        .notepad-textarea[readonly] {
+            cursor: default;
+        }
+
+        .notepad-footer {
+            padding: 16px 30px;
+            border-top: 1px solid var(--surface-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.01);
+        }
+
+        .notepad-info {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .notepad-btns {
+            display: flex;
+            gap: 12px;
+        }
+
+        .notepad-btn {
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition-smooth);
+        }
+
+        .notepad-btn-close {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-main);
+        }
+
+        .notepad-btn-close:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Responsive adjustments */
+        @media(max-width: 768px) {
+            .header { padding: 15px 20px; }
+            .header.scrolled { padding: 10px 20px; }
+            .content-container { padding: 0 20px 100px; }
+            .search-wrapper { width: 100%; margin-top: 10px; order: 3; }
+            .header { flex-wrap: wrap; }
+            .fc-grid { grid-template-columns: 1fr; }
+            .tab-btn { padding: 8px 16px; font-size: 0.85rem; }
+        }
+        
+    
+        /* Collapsible Accordion for Others Tab */
+        .accordion-group {
+            margin-bottom: 12px;
+            background: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            border-radius: 16px;
+            overflow: hidden;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            transition: var(--transition-smooth);
+        }
+        
+        .accordion-group:hover {
+            border-color: var(--surface-border-hover);
+        }
+        
+        .accordion-header {
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            transition: var(--transition-smooth);
+        }
+        
+        .accordion-header:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        .accordion-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .accordion-badge {
+            background: rgba(99, 102, 241, 0.15);
+            color: #a5b4fc;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+        
+        .accordion-arrow {
+            width: 20px;
+            height: 20px;
+            color: var(--text-muted);
+            transition: transform 0.3s ease;
+        }
+        
+        .accordion-header.active .accordion-arrow {
+            transform: rotate(180deg);
+            color: var(--primary);
+        }
+        
+        .accordion-panel {
+            display: none;
+            padding: 0 24px 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            background: rgba(0, 0, 0, 0.1);
+        }
+            /* Top-Level Categories Grid in Others Tab */
+        .top-level-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .top-level-card {
+            background: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 170px;
+            cursor: pointer;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            transition: var(--transition-bounce);
+        }
+        
+        .top-level-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            border-color: var(--surface-border-hover);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+        }
+        
+        .top-level-card-emoji {
+            font-size: 2.6rem;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));
+        }
+        
+        .top-level-card-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--text-main);
+            text-transform: capitalize;
+        }
+        
+        .top-level-card-count {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+        
+        /* Back Button */
+        .back-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 10px 22px;
+            border-radius: 30px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            transition: var(--transition-smooth);
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+        
+        .back-icon {
+            width: 16px;
+            height: 16px;
+            color: var(--text-main);
+        }
+    </style>
+    <script src="others.js" defer></script>
+</head>
+<body>
+
+    <!-- Ambient Glowing Backdrop -->
+    <div class="ambient-glow"></div>
+    <div class="ambient-glow-2"></div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"></div>
+        <div class="loading-text">Anabrata's Space</div>
+    </div>
+
+    <!-- ===== HEADER ===== -->
+    <header class="header" id="mainHeader">
+        <div class="logo-section">
+            <img src="logo.png" class="logo-img" alt="Logo" onerror="this.style.display='none'">
+            <h1 class="logo-title">ANABRATA's Space</h1>
+        </div>
+        <div class="search-wrapper">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search resources...">
+            <svg class="search-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.3-4.3"></path>
+            </svg>
+        </div>
+    </header>
+
+    <!-- ===== SWITCH TAB BAR ===== -->
+    <div class="tab-bar-container">
+        <div class="tab-bar">
+            <button class="tab-btn active" onclick="switchTab('websites')">Websites</button>
+            <button class="tab-btn" onclick="switchTab('flashcards')">Flash Cards</button>
+            <button class="tab-btn" onclick="switchTab('others')">Others</button>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT CONTAINER ===== -->
+    <main class="content-container">
+        
+        <!-- Websites Grid Area -->
+        <div id="websitesTab" class="tab-content active">
+            <div id="dashboard"></div>
+        </div>
+
+        <!-- Flashcards Grid Area -->
+        <div id="flashcardsTab" class="tab-content">
+            <div class="fc-grid" id="flashcardsArea"></div>
+        </div>
+
+        <!-- Others Grid Area -->
+        <div id="othersTab" class="tab-content">
+            <div id="othersDashboard"></div>
+        </div>
+
+    </main>
+
+    <!-- ===== CUSTOM NOTEPAD OVERLAY ===== -->
+    <div class="notepad-overlay" id="notepadOverlay">
+        <div class="notepad">
+            <div class="notepad-header">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                    <div id="notepadLogo" style="width: 38px; height: 38px; border-radius: 10px; overflow: hidden; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <img src="" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span style="display:none; font-size: 1.1rem;">🃏</span>
+                    </div>
+                    <span class="notepad-title" id="notepadTitle">Flash Card Note</span>
+                </div>
+            </div>
+            <div class="notepad-body">
+                <textarea class="notepad-textarea" id="notepadTextarea" readonly></textarea>
+            </div>
+            <div class="notepad-footer">
+                <span class="notepad-info" id="notepadCounts">0 characters · 0 words</span>
+                <div class="notepad-btns">
+                    <button class="notepad-btn notepad-btn-close" onclick="closeNotepad()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+    (function() {
+        'use strict';
+
+        // ============================================================
+        // DATABASE: EDIT BOOKMARKS (Websites) HERE
+        // ============================================================
+        // INSTRUCTIONS FOR NON-CODERS:
+        // To add a website link, copy-paste a line below. 
+        // Keep the format exact: ["Category Name", "Website Title", "Website URL", "Short Description"],
+        // 
+        // Example:
+        // ["AI Tools", "Google Gemini", "https://gemini.google.com/app", "Google AI"],
+        
+        const MY_WEBSITES = [
+            // --- PDF Editors ---
+            ["PDF Editors", "PDF Watermark Remover", "https://lightpdf.com/remove-watermark", "LightPDF"],
+            ["PDF Editors", "Image to PDF", "https://www.freepdfconvert.com/", "Free PDF Convert"],
+            ["PDF Editors", "Merge PDF", "https://www.ilovepdf.com/merge_pdf", "iLovePDF"],
+            ["PDF Editors", "PDF to Excel", "https://www.ilovepdf.com/pdf_to_excel", "Convert"],
+            ["PDF Editors", "JPG to PDF", "https://www.ilovepdf.com/jpg_to_pdf", "Convert"],
+            ["PDF Editors", "Powerpoint to PDF", "https://www.ilovepdf.com/powerpoint_to_pdf", "Convert"],
+            ["PDF Editors", "OCR PDF", "https://www.ilovepdf.com/ocr-pdf", "Scan"],
+            ["PDF Editors", "PDF to JPG", "https://www.ilovepdf.com/pdf_to_jpg", "Extract"],
+            ["PDF Editors", "Organize PDF", "https://www.ilovepdf.com/organize-pdf", "Sort"],
+            ["PDF Editors", "Remove Pages", "https://www.ilovepdf.com/remove-pages", "Delete"],
+            ["PDF Editors", "PDF to Word", "https://www.ilovepdf.com/pdf_to_word", "Convert"],
+            ["PDF Editors", "Word to PDF", "https://www.ilovepdf.com/word_to_pdf", "Convert"],
+            // --- Image Editing ---
+            ["Image Editing", "Image Background", "https://www.pixelbin.io/ai-tools/watermark-remover", "PixelBin"],
+            ["Image Editing", "Editing Prompt", "https://editingprompt.com/", "Prompts"],
+            ["Image Editing", "Post Images", "https://postimages.org/", "Hosting"],
+            ["Image Editing", "AI Photo Editor", "https://pixlr.com/express/?tool=adjust", "Pixlr"],
+            ["Image Editing", "Super Resolution", "https://deepai.org/machine-learning-model/torch-srgan", "DeepAI"],
+            ["Image Editing", "Watermark Remover", "https://lightpdf.com/image-watermark-remover", "Clean"],
+            ["Image Editing", "Clothes Editor", "https://fitroom.app/create", "Fitroom"],
+            ["Image Editing", "Background Remover", "https://www.photoroom.com/tools/background-remover", "PhotoRoom"],
+            ["Image Editing", "Face Swap", "https://remaker.ai/face-swap-free/", "Remaker"],
+            ["Image Editing", "Photoshop Online", "https://www.photopea.com/", "Photopea"],
+            ["Image Editing", "Merge Images", "https://pinetools.com/merge-images", "PineTools"],
+            ["Image Editing", "Image Compressor", "https://imageresizer.com/image-compressor", "Resize"],
+            ["Image Editing", "Circle Crop", "https://circlecropimage.com/", "Crop"],
+            ["Image Editing", "iLoveIMG", "https://www.iloveimg.com/", "Suite"],
+            ["Image Editing", "BG Remover", "https://www.iloveimg.com/remove-background", "Remove BG"],
+            ["Image Editing", "Online Compressor", "https://imagecompressor.com/", "Compress"],
+            ["Image Editing", "Resize for WhatsApp", "https://imresizer.com/resize-image-to-whatsapp-dp?content=hide", "DP Resize"],
+            // --- Tools & Utilities ---
+            ["Tools & Utilities", "Figlet Generator", "https://doodlenerd.com/web-tool/figlet-generator", "ASCII"],
+            ["Tools & Utilities", "VirusTotal", "https://www.virustotal.com/gui/home/upload", "Scan"],
+            ["Tools & Utilities", "Hinglish Translator", "https://anythingtranslate.com/translators/hinglish-translator/", "Translate"],
+            ["Tools & Utilities", "YouTube Tool", "https://tuberanker.com/", "SEO"],
+            ["Tools & Utilities", "Chat v2.0", "https://chatv2.septapus.com/", "Style Gen"],
+            ["Tools & Utilities", "Temp Mail So", "https://tempmail.so/", "Email"],
+            ["Tools & Utilities", "HTML Viewer", "https://html.onlineviewer.net/", "Code"],
+            ["Tools & Utilities", "Temp Mail O", "https://tempmailo.com/", "Email"],
+            ["Tools & Utilities", "Software hack", "https://filecr.com/windows/office-pdf/", "FileCR"],
+            ["Tools & Utilities", "ToffeeShare", "https://toffeeshare.com/en/", "Share"],
+            ["Tools & Utilities", "Questions", "https://childquesz.netlify.app/", "ChildQuesz"],
+            ["Tools & Utilities", "Bijoy Converter", "https://bsbk.portal.gov.bd/apps/bangla-converter/index.html", "Unicode"],
+            ["Tools & Utilities", "JioCloud", "https://www.jioaicloud.com/home", "Storage"],
+            ["Tools & Utilities", "Link Ink", "https://lnk.ink/dashboard", "Shortener"],
+            ["Tools & Utilities", "QR Generator", "https://pewscorner.github.io/barcodes/qrcode_generator.html", "QR Code"],
+            // --- AI Tools ---
+            ["AI Tools", "Venice Chat", "https://venice.ai/chat", "Uncensored"],
+            ["AI Tools", "LMArena", "https://lmarena.ai/?mode=side-by-side", "Compare"],
+            ["AI Tools", "Claude", "https://claude.ai/login?returnTo=%2F%3F", "Anthropic"],
+            ["AI Tools", "Perplexity", "https://www.perplexity.ai/", "Search"],
+            ["AI Tools", "Google Gemini", "https://gemini.google.com/app", "Google"],
+            ["AI Tools", "Qwen", "https://chat.qwen.ai/", "Alibaba"],
+            ["AI Tools", "DeepSeek", "https://chat.deepseek.com/", "DeepSeek"],
+            ["AI Tools", "Copilot", "https://copilot.microsoft.com/chats/umqpciKs3jhwoeUTXwon8", "Microsoft"],
+            // --- Games ---
+            ["Games", "Aternos", "https://aternos.org/go/", "Minecraft"],
+            ["Games", "House of Dead", "https://retroonline.net/Windows/The%20House%20of%20the%20Dead", "Retro"],
+            ["Games", "Games Downloader", "https://ankergames.net/", " Download the Pirated game from here!"],
+            // --- Video Downloaders ---
+            ["Video Downloaders", "SSYouTube", "https://ssyoutube.online/en2/", "YouTube"],
+            ["Video Downloaders", "Cobalt", "https://cobalt.tools/", "Clean"],
+            ["Video Downloaders", "YTMP3", "https://ytmp3.gg/", "MP3"],
+            // --- Movies: Watch ---
+            ["Movies: Watch", "Fmovies", "https://ww3-fmovies.com/home/", "Stream"],
+            ["Movies: Watch", "123Movies", "https://freewatchmovie.online/home/", "Stream"],
+            ["Movies: Watch", "Soap2Day", "https://soap2dayonline.com/movies/", "Stream"],
+            // --- Movies: Download ---
+            ["Movies: Download", "Cinemaluxe", "https://cinemalux.fit/", "Download"],
+            ["Movies: Download", "9xflix", "https://9xflix.gdn/", "Download"],
+            ["Movies: Download", "MoviesVerse", "https://hdmovieverse.cloud/", "Download"],
+            ["Movies: Download", "Vegamovies", "https://avegamovies.cfd/", "Download"],
+            ["Movies: Download", "VegaMovies 2.0", "https://vegamovise.vip/", "Proxy"],
+            ["Movies: Download", "FilmyFly", "https://prmovies4u.com/", "Regional Movies"],
+            // --- Music & Audio ---
+            // --- My Projects ---
+            ["My Projects", "Software Makerz", "https://softwaremakerz.netlify.app/", "Portfolio"],
+            ["My Projects", "MilkTraker", "https://milktrakerz.netlify.app/", "App"],
+            ["My Projects", "HandToTextz", "https://handtextz.netlify.app/", "OCR"],
+            ["My Projects", "PDF Bookletz", "https://pdfbookletz.netlify.app/", "Tools"],
+            ["My Projects", "PPT Maker", "https://pptmakerz.netlify.app/", "Slides"],
+            ["My Projects", "Page Remover", "https://pdfpageremoverz.netlify.app/", "PDF"],
+            ["My Projects", "Voice PDF", "https://voicepdfz.netlify.app/", "Audio"],
+            ["My Projects", "Colour Picker", "https://pinkpiker.netlify.app/", "Design"],
+            ["My Projects", "Images to PDF", "https://imageztopdfz.netlify.app/", "Convert"],
+            ["My Projects", "QR Arranger", "https://qrana.netlify.app/", "QR"],
+            ["My Projects", "Pagemix", "https://pagemix.netlify.app/", "Tools"],
+            ["My Projects", "Photopy", "https://photocopyana.netlify.app/", "Copy"],
+            ["My Projects", "FlipTimer V2", "https://fliptimerz.netlify.app/", "Time"],
+            ["My Projects", "Drop", "https://app.netlify.com/drop", "Deploy"],
+            ["My Projects", "Netlify File Maker", "https://netlifyanab.netlify.app/", "Files"],
+            ["My Projects", "InfinityFree", "https://dash.infinityfree.com/accounts/if0_40401503", "Host"],
+            ["My Projects", "Netlify File Maker V2", "https://netlifyanabv2.netlify.app/", "Files V2"]
+        ];
+
+        // ============================================================
+        // DATABASE: EDIT FLASHCARDS (Notes) HERE
+        // ============================================================
+        // INSTRUCTIONS FOR NON-CODERS:
+        // To add a new card, copy-paste a block below.
+        // Keep the format exact:
+        // [
+        //      "Card Title",
+        //      "Image URL or logo.png",
+        //      `Multi-line description or note text goes here`
+        // ],
+        //
+        // You can paste postimg links directly as the image URL, e.g. "https://postimg.cc/XXRhf6Xn"
+
+        const MY_FLASHCARDS = [
+            [
+                "Melotune",
+                "https://postimg.cc/QBjZpG41",
+                `The melotune Offers a high betrayed about 360 kbps betrayed which is very high but problem is it not having all the songs means majority of song you will find on that but a little bit songs are not inside the application which I do not think might you be focus on that the link of the application is:
+
+https://github.com/Harshshah6/SaavnMp3-Android
+`
+            ],
+            [
+                "Simp Music",
+                "https://postimg.cc/YvYt6xtz",
+                `The Simp Music enable us to play the music with the help of youtube api at Max to max 270kbps 
+the link of the Simp Music is 👇👇👇
+https://github.com/maxrave-dev/SimpMusic
+`
+            ],
+            [
+                "SpotiFLAC",
+                "https://postimg.cc/XXRhf6Xn",
+                `SpotiFLAC is one of the best And one of my favorite applications in this we will download flac format a music which is lossless musical without compression and the highest storage taking music with no any compression or most detailed music exist but the problem is we cannot stream that we only download that the link of the application is:
+
+https://github.com/spotiflacapp/SpotiFLAC-Mobile
+
+this also need Extension for download the extinction link to download it is:
+
+https://github.com/spotiflacapp/SpotiFLAC-Extension
+
+(When you open this website the green color code button click on data and download the Zip file after that unzip it and after that in the application you have to in the extension option you have to click on that and manually choose those file and turn on the extension so it will be start working)
+
+`
+            ],
+            [
+                "Joytify",
+                "https://postimg.cc/RWMgdSBj",
+                `This is a music app which allow you to play all of the music existing in the world because this is using youtube api and others api and make it 320 Kbps music streaming but having a single ad only sometime not So you can consider it will absolutely free and a good music app the link of the application through play store is:
+
+https://play.google.com/store/apps/details?id=music.ytstream.youtify
+`
+            ],
+            [
+                "music player",
+                "https://postimg.cc/crcmrpn5",
+                `It is a free music player app which is a modded So it will not have any type of ads and lots of feature you will explore the link of the music player through drive is:
+
+https://drive.google.com/file/d/1H4gZL9PN1DtkwKJWO65C7SwU7j8yVlak/view?usp=sharing
+`
+            ],
+            [
+                "Morphe",
+                "https://postimg.cc/Czx5WsXy",
+                `Morphe It is a app in which you will enjoy youtube ad free and youtube music totally add three and also the background play absolutely free with secure we have to download first then it will show the two options basically mainly youtube and the youtube music and when we select youtube or youtube music it will show a red color download button and downside go to browser or this type of thing so click on the go to browser so it will open a new tab on the browser where you will see the Youtube APK basically go downside and download the Youtuber which is in red button now after download go back to the application and then you will again click on the download option so it will open the file so choose that youtube that you download recently so it will patch that youtube so as percentage will come after 100 percent you will able to use the youtube basically it make a new youtube app with the existing one so the new youtube have no add anywhere and a lot of feature and lot of customizations you get also you can sign up there and get your all history and all the thing there only thing that you not get in the premier that you will not get they download highest quality option otherwise many things which is not even present in the youtube premiere but it is on that and that is very helpful like the sponsor is keep and the main thing which are unbelievable that it is and a lot of customization in the main application of youtube and basically no ads the application link is:
+
+https://github.com/morpheapp
+`
+            ],
+            [
+                "OpenSpot",
+                "https://postimg.cc/75p4W011",
+                `This application is for higher resolution music like 320 KPS supports it is ok but the UI is like glitchy type but it is ok for playing song its back end is from Jio Saavn so it will easily get you the best quality and in my case the downloading option is not working means downloading but not showing in downloading folder so otherwise it is OK no problem The link of the application is 👇👇👇
+
+https://github.com/BlackHatDevX/openspot-music-app
+`
+            ],
+            [
+                "Echo Music",
+                "https://postimg.cc/75rXtLGJ",
+                `This music app also support the high resolution like 320 KPS support but it is good looking UI and a lot of features like the YOUTUBE also integrated on that so you can find most of the music so it will also a good music streaming and also supporting download option so the link of the music application is 👇👇👇
+
+https://github.com/EchoMusicApp/Echo-Music`
+            ],
+            [
+                "Seal",
+                "https://postimg.cc/21qbWdSf",
+                `This is the app which is totally add free and support for the video downloading application which is totally  sites firstly it is add free and 2nd support all the common sites like Youtube Instagram or Facebook all all very easily a Twitter all the thing and very easy to use the link of the application is 👇👇👇
+
+https://github.com/junkfood02/Seal`
+            ],
+        ];
+
+        // ============================================================
+        // DATABASE: EDIT OTHERS (FMHY Links) HERE
+        // ============================================================
+        // Same format as MY_WEBSITES:
+        // ["Sub-Category", "Site Name", "URL", "Short Description"],
+
+        // MY_OTHERS is loaded dynamically from others.js
+
+        // ============================================================
+        
+
+// STATE INITIALIZATION & PARSING
+        // ============================================================
+        const bookmarks = [];
+        MY_WEBSITES.forEach(([categoryName, name, url, desc]) => {
+            let group = bookmarks.find(g => g.category === categoryName);
+            if (!group) {
+                group = { category: categoryName, links: [] };
+                bookmarks.push(group);
+            }
+            group.links.push({ name, url, desc });
+        });
+
+                        let othersData = null; // topLevel -> { subCategory: [links] }
+        let othersTopLevels = []; // array of { name, count, emoji }
+        let currentOthersCategory = null; // selected top-level category
+
+        const emojiMap = {
+            "educational": "📚",
+            "education": "📚",
+            "misc": "📦",
+            "mobile": "📱",
+            "non-english": "🌐",
+            "developer-tools": "💻",
+            "video": "🎥",
+            "gaming-tools": "🛠️",
+            "gaming": "🎮",
+            "audio": "🎵",
+            "music": "🎵",
+            "linux-macos": "🐧",
+            "reading": "📚",
+            "internet-tools": "🕸️",
+            "image-tools": "🖼️",
+            "social-media-tools": "📣",
+            "text-tools": "📝",
+            "storage": "💾",
+            "privacy": "🔒",
+            "video-tools": "🎬",
+            "ai": "🤖",
+            "system-tools": "⚙️",
+            "file-tools": "📁",
+            "downloading": "📥",
+            "torrenting": "⚡"
+        };
+
+        function initOthers() {
+            if (othersData) return;
+            if (typeof MY_OTHERS === 'undefined' || !MY_OTHERS) return;
+            
+            othersData = {};
+            const counts = {};
+            
+            MY_OTHERS.forEach(([fullCategory, name, url, desc]) => {
+                const parts = fullCategory.split(' -> ');
+                const topLevel = parts[0] || 'Other';
+                const subCategory = parts.slice(1).join(' -> ') || '/';
+                
+                if (!othersData[topLevel]) {
+                    othersData[topLevel] = {};
+                    counts[topLevel] = 0;
+                }
+                if (!othersData[topLevel][subCategory]) {
+                    othersData[topLevel][subCategory] = [];
+                }
+                
+                othersData[topLevel][subCategory].push({ name, url, desc });
+                counts[topLevel]++;
+            });
+            
+            othersTopLevels = Object.keys(othersData).map(name => {
+                return {
+                    name: name,
+                    count: counts[name],
+                    emoji: emojiMap[name.toLowerCase()] || "ðŸ”—"
+                };
+            }).sort((a, b) => b.count - a.count);
+        }
+
+        window.openOthersCategory = function(name) {
+            currentOthersCategory = name;
+            renderOthers(searchInput.value);
+        };
+        
+        window.backToOthersCategories = function() {
+            currentOthersCategory = null;
+            renderOthers(searchInput.value);
+        };
+
+        const flashCards = MY_FLASHCARDS.map(([name, image, note], index) => {
+            return {
+                id: `fc_${index}`,
+                name: name,
+                image: image,
+                note: note
+            };
+        });
+
+        let currentTab = 'websites';
+        let currentNotepadFcId = null;
+
+        const dashboard = document.getElementById('dashboard');
+        const othersDashboard = document.getElementById('othersDashboard');
+        const flashcardsArea = document.getElementById('flashcardsArea');
+        const searchInput = document.getElementById('searchInput');
+
+        // ============================================================
+        // LOADING SCREEN FADE OUT
+        // ============================================================
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 1000);
+        });
+
+        // Sticky Header scroll styling
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                document.getElementById('mainHeader').classList.add('scrolled');
+            } else {
+                document.getElementById('mainHeader').classList.remove('scrolled');
+            }
+        });
+
+        // Helper to resolve Postimages share links to direct CDN images
+        function resolveImageUrl(url) {
+            if (!url) return '';
+            const match = url.match(/(?:postimg\.cc|postimages\.org)\/([a-zA-Z0-9]+)/);
+            if (match) {
+                return `https://i.postimg.cc/${match[1]}/image.jpg`;
+            }
+            return url;
+        }
+
+        // Helper to extract clean hostname favicon
+        function getIcon(url) {
+            try {
+                return `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}&sz=128`;
+            } catch { return ''; }
+        }
+
+        // ============================================================
+        // RENDER FUNCTIONS
+        // ============================================================
+        
+        // Switch between tabs
+        window.switchTab = function(tabName) {
+            currentTab = tabName;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if (tabName === 'websites') {
+                document.querySelector('.tab-btn[onclick="switchTab(\'websites\')"]').classList.add('active');
+                document.getElementById('websitesTab').classList.add('active');
+                renderBookmarks();
+            } else if (tabName === 'flashcards') {
+                document.querySelector('.tab-btn[onclick="switchTab(\'flashcards\')"]').classList.add('active');
+                document.getElementById('flashcardsTab').classList.add('active');
+                renderFlashCards();
+            } else if (tabName === 'others') {
+                document.querySelector('.tab-btn[onclick="switchTab(\'others\')"]').classList.add('active');
+                document.getElementById('othersTab').classList.add('active');
+                renderOthers();
+            }
+        };
+
+        // Generic grid renderer (reused for Websites & Others)
+        function renderGrid(targetEl, data, filter = '') {
+            targetEl.innerHTML = '';
+            const lowerFilter = filter.toLowerCase();
+
+            data.forEach((group) => {
+                const filteredLinks = group.links.filter(l => 
+                    l.name.toLowerCase().includes(lowerFilter) || 
+                    (l.desc && l.desc.toLowerCase().includes(lowerFilter))
+                );
+
+                if (filteredLinks.length === 0 && filter !== '') return;
+
+                const section = document.createElement('div');
+                section.className = 'category-section';
+
+                const header = document.createElement('div');
+                header.className = 'category-header';
+                header.innerHTML = `<h2 class="category-title">${group.category}</h2>`;
+                section.appendChild(header);
+
+                const grid = document.createElement('div');
+                grid.className = 'category-grid';
+
+                filteredLinks.forEach(link => {
+                    const card = document.createElement('div');
+                    card.className = 'bookmark-card';
+                    const iconUrl = getIcon(link.url);
+                    
+                    card.innerHTML = `
+                        <div class="bookmark-card-top">
+                            <div class="bookmark-icon-wrap">
+                                <img src="${iconUrl}" class="bookmark-icon" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                <span class="bookmark-emoji" style="display:none;">🔗</span>
+                            </div>
+                            <div class="bookmark-info">
+                                <div class="bookmark-name">${link.name}</div>
+                                <div class="bookmark-desc">${link.desc || 'No description'}</div>
+                            </div>
+                        </div>
+                    `;
+                    card.onclick = () => {
+                        window.location.href = link.url;
+                    };
+                    grid.appendChild(card);
+                });
+
+                section.appendChild(grid);
+                targetEl.appendChild(section);
+            });
+
+            if (targetEl.innerHTML === '' && filter !== '') {
+                targetEl.innerHTML = `<div style="text-align: center; color: var(--text-muted); margin-top: 40px;">No matching links found.</div>`;
+            }
+        }
+
+        // Render Bookmarks Grid
+        function renderBookmarks(filter = '') {
+            renderGrid(dashboard, bookmarks, filter);
+        }
+
+                // Render Others Grid
+        function renderOthers(filter = '') {
+            initOthers();
+            if (!othersTopLevels || othersTopLevels.length === 0) {
+                othersDashboard.innerHTML = '<div style="text-align: center; color: var(--text-muted); margin-top: 40px;">Loading others bookmarks... Please wait.</div>';
+                setTimeout(() => renderOthers(filter), 100);
+                return;
+            }
+            othersDashboard.innerHTML = '';
+            const lowerFilter = filter.toLowerCase();
+
+            if (filter !== '') {
+                // Flat list for search (limit to 200 items for performance)
+                let matchesCount = 0;
+                const matchLimit = 200;
+
+                const resultsHeader = document.createElement('div');
+                resultsHeader.style.marginBottom = '20px';
+                resultsHeader.style.color = 'var(--text-muted)';
+                resultsHeader.style.fontFamily = 'var(--font-display)';
+                resultsHeader.style.fontSize = '0.95rem';
+                othersDashboard.appendChild(resultsHeader);
+
+                const grid = document.createElement('div');
+                grid.className = 'category-grid';
+                othersDashboard.appendChild(grid);
+
+                const keys = Object.keys(othersData);
+                for (let i = 0; i < keys.length; i++) {
+                    const topLevel = keys[i];
+                    const subs = othersData[topLevel];
+                    const subKeys = Object.keys(subs);
+                    
+                    for (let j = 0; j < subKeys.length; j++) {
+                        const subCat = subKeys[j];
+                        const filteredLinks = subs[subCat].filter(l => 
+                            l.name.toLowerCase().includes(lowerFilter) || 
+                            (l.desc && l.desc.toLowerCase().includes(lowerFilter))
+                        );
+
+                        for (let k = 0; k < filteredLinks.length; k++) {
+                            if (matchesCount >= matchLimit) break;
+                            const link = filteredLinks[k];
+                            matchesCount++;
+
+                            const card = document.createElement('div');
+                            card.className = 'bookmark-card';
+                            const iconUrl = getIcon(link.url);
+                            
+                            card.innerHTML = `
+                                <div class="bookmark-card-top">
+                                    <div class="bookmark-icon-wrap">
+                                        <img src="${iconUrl}" class="bookmark-icon" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                        <span class="bookmark-emoji" style="display:none;">ðŸ”—</span>
+                                    </div>
+                                    <div class="bookmark-info">
+                                        <div class="bookmark-name">${link.name}</div>
+                                        <div class="bookmark-desc">${link.desc || 'No description'}</div>
+                                    </div>
+                                </div>
+                            `;
+                            card.onclick = () => {
+                                window.location.href = link.url;
+                            };
+                            grid.appendChild(card);
+                        }
+                        if (matchesCount >= matchLimit) break;
+                    }
+                    if (matchesCount >= matchLimit) break;
+                }
+
+                if (matchesCount === 0) {
+                    othersDashboard.innerHTML = `<div style="text-align: center; color: var(--text-muted); margin-top: 40px;">No matching links found in Others.</div>`;
+                } else {
+                    resultsHeader.textContent = `Showing first ${matchesCount} matches for "${filter}"`;
+                }
+            } else if (currentOthersCategory === null) {
+                // Render top-level category cards
+                const grid = document.createElement('div');
+                grid.className = 'top-level-grid';
+
+                othersTopLevels.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'top-level-card';
+                    card.onclick = () => openOthersCategory(item.name);
+                    
+                    card.innerHTML = `
+                        <div class="top-level-card-emoji">${item.emoji}</div>
+                        <div class="top-level-card-title">${item.name}</div>
+                        <div class="top-level-card-count">${item.count.toLocaleString()} links</div>
+                    `;
+                    grid.appendChild(card);
+                });
+                othersDashboard.appendChild(grid);
+            } else {
+                // Render sub-category section-wise view for the opened top-level category
+                const catData = othersData[currentOthersCategory];
+                if (!catData) {
+                    currentOthersCategory = null;
+                    renderOthers(filter);
+                    return;
+                }
+
+                // Back button
+                const backBtn = document.createElement('button');
+                backBtn.className = 'back-btn';
+                backBtn.onclick = backToOthersCategories;
+                backBtn.innerHTML = `
+                    <svg class="back-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path>
+                    </svg>
+                    <span>Back to Categories</span>
+                `;
+                othersDashboard.appendChild(backBtn);
+
+                // Section header
+                const titleEmoji = emojiMap[currentOthersCategory.toLowerCase()] || "ðŸ”—";
+                const titleHeader = document.createElement('div');
+                titleHeader.style.display = 'flex';
+                titleHeader.style.alignItems = 'center';
+                titleHeader.style.gap = '14px';
+                titleHeader.style.marginBottom = '30px';
+                titleHeader.innerHTML = `
+                    <span style="font-size: 2.2rem; filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));">${titleEmoji}</span>
+                    <h1 class="logo-title" style="font-size: 2.2rem; text-transform: capitalize; margin: 0; background: linear-gradient(90deg, #fff, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">${currentOthersCategory}</h1>
+                `;
+                othersDashboard.appendChild(titleHeader);
+
+                // Render each subcategory as a section
+                const subKeys = Object.keys(catData);
+                subKeys.forEach(subName => {
+                    const links = catData[subName];
+                    if (links.length === 0) return;
+
+                    const section = document.createElement('div');
+                    section.className = 'category-section';
+
+                    const header = document.createElement('div');
+                    header.className = 'category-header';
+                    const cleanSubName = subName === '/' ? 'General' : subName;
+                    header.innerHTML = `<h2 class="category-title">${cleanSubName}</h2>`;
+                    section.appendChild(header);
+
+                    const grid = document.createElement('div');
+                    grid.className = 'category-grid';
+
+                    links.forEach(link => {
+                        const card = document.createElement('div');
+                        card.className = 'bookmark-card';
+                        const iconUrl = getIcon(link.url);
+                        
+                        card.innerHTML = `
+                            <div class="bookmark-card-top">
+                                <div class="bookmark-icon-wrap">
+                                    <img src="${iconUrl}" class="bookmark-icon" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                    <span class="bookmark-emoji" style="display:none;">ðŸ”—</span>
+                                </div>
+                                <div class="bookmark-info">
+                                    <div class="bookmark-name">${link.name}</div>
+                                    <div class="bookmark-desc">${link.desc || 'No description'}</div>
+                                </div>
+                            </div>
+                        `;
+                        card.onclick = () => {
+                            window.location.href = link.url;
+                        };
+                        grid.appendChild(card);
+                    });
+
+                    section.appendChild(grid);
+                    othersDashboard.appendChild(section);
+                });
+            }
+        }
+
+// Render Flashcards Grid
+        function renderFlashCards() {
+            flashcardsArea.innerHTML = '';
+
+            if (flashCards.length === 0) {
+                flashcardsArea.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); margin-top: 40px;">No flashcards found. Edit FLASHCARDS in index.html to add some.</div>`;
+                return;
+            }
+
+            flashCards.forEach(fc => {
+                const card = document.createElement('div');
+                card.className = 'fc-card';
+                
+                const imageUrl = resolveImageUrl(fc.image || '');
+                const hasNote = fc.note && fc.note.trim().length > 0;
+                
+                const chars = fc.note ? fc.note.length : 0;
+                const words = fc.note ? fc.note.trim().split(/\s+/).filter(w => w).length : 0;
+
+                card.innerHTML = `
+                    <div class="fc-card-logo-wrap">
+                        <img class="fc-card-logo-img" src="${imageUrl}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span style="display:none; font-size: 1.2rem;">🃏</span>
+                    </div>
+                    ${hasNote ? '<div class="fc-note-badge">📝</div>' : ''}
+                    <div class="fc-card-title" style="margin-top: 15px;">${fc.name}</div>
+                    <div class="fc-card-stat">${words} Words · ${chars} Chars</div>
+                `;
+                
+                card.onclick = () => {
+                    openNotepad(fc.id);
+                };
+                
+                flashcardsArea.appendChild(card);
+            });
+        }
+
+        // Search Listener (works for Websites and Others tabs)
+        searchInput.addEventListener('input', (e) => {
+            if (currentTab === 'websites') {
+                renderBookmarks(e.target.value);
+            } else if (currentTab === 'others') {
+                renderOthers(e.target.value);
+            }
+        });
+
+        // ============================================================
+        // CUSTOM NOTEPAD SYSTEM
+        // ============================================================
+        const notepadOverlay = document.getElementById('notepadOverlay');
+        const notepadTextarea = document.getElementById('notepadTextarea');
+        const notepadCounts = document.getElementById('notepadCounts');
+
+        window.openNotepad = function(fcId) {
+            const fc = flashCards.find(c => c.id === fcId);
+            if (!fc) return;
+
+            currentNotepadFcId = fcId;
+            
+            document.getElementById('notepadTitle').textContent = fc.name;
+            notepadTextarea.value = fc.note || '';
+            
+            const logoImg = document.getElementById('notepadLogo').querySelector('img');
+            const imageUrl = resolveImageUrl(fc.image || '');
+            logoImg.src = imageUrl;
+            logoImg.style.display = 'block';
+            logoImg.nextElementSibling.style.display = 'none';
+
+            updateWordCount(fc.note || '');
+            notepadOverlay.classList.add('active');
+        };
+
+        window.closeNotepad = function() {
+            notepadOverlay.classList.remove('active');
+            currentNotepadFcId = null;
+            renderFlashCards();
+        };
+
+        function updateWordCount(text) {
+            const charCount = text.length;
+            const wordCount = text.trim().split(/\s+/).filter(w => w).length;
+            notepadCounts.textContent = `${charCount} characters · ${wordCount} words`;
+        }
+
+        // ============================================================
+        // ON LOAD INITIALIZATION
+        // ============================================================
+        renderBookmarks();
+    })();
+    </script>
+</body>
+</html>
